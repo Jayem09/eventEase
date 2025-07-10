@@ -13,99 +13,70 @@ if (!isAdmin()) {
 
 $pdo = getDBConnection();
 
-// Handle AJAX actions
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    $response = ['success' => false, 'message' => ''];
-    
-    $action = $_POST['action'];
-    $event_id = (int)($_POST['event_id'] ?? 0);
-    
-    if ($event_id > 0) {
-        switch ($action) {
-            case 'approve':
-                $stmt = $pdo->prepare("UPDATE events SET status = 'approved', approved_by = ? WHERE id = ?");
-                if ($stmt->execute([$_SESSION['user_id'], $event_id])) {
-                    $response = ['success' => true, 'message' => 'Event approved successfully!'];
-                } else {
-                    $response = ['success' => false, 'message' => 'Failed to approve event.'];
-                }
-                break;
-                
-            case 'decline':
-                $stmt = $pdo->prepare("UPDATE events SET status = 'declined', approved_by = ? WHERE id = ?");
-                if ($stmt->execute([$_SESSION['user_id'], $event_id])) {
-                    $response = ['success' => true, 'message' => 'Event declined successfully!'];
-                } else {
-                    $response = ['success' => false, 'message' => 'Failed to decline event.'];
-                }
-                break;
-                
-            case 'delete':
-                $stmt = $pdo->prepare("DELETE FROM events WHERE id = ?");
-                if ($stmt->execute([$event_id])) {
-                    $response = ['success' => true, 'message' => 'Event deleted successfully!'];
-                } else {
-                    $response = ['success' => false, 'message' => 'Failed to delete event.'];
-                }
-                break;
-        }
-    }
-    
-    // Always return JSON response for AJAX requests
-    if (isset($_POST['ajax']) || isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-        header('Content-Type: application/json');
-        echo json_encode($response);
-        exit;
-    } else {
-        // For non-AJAX requests, set flash message and redirect
-        if ($response['success']) {
-            setFlashMessage('success', $response['message']);
-        } else {
-            setFlashMessage('danger', $response['message']);
-        }
-        redirect('events.php');
-    }
-}
-
 // Get filter parameters
 $filter = $_GET['filter'] ?? '';
 $search = $_GET['search'] ?? '';
+$year = $_GET['year'] ?? date('Y');
 
-// Build query
-$where_conditions = [];
+// Build query for past events
+$where_conditions = ["e.event_date < CURDATE()"];
 $params = [];
 
-if ($filter === 'pending') {
-    $where_conditions[] = "e.status = 'pending'";
-} elseif ($filter === 'approved') {
+if ($filter === 'approved') {
     $where_conditions[] = "e.status = 'approved'";
 } elseif ($filter === 'declined') {
     $where_conditions[] = "e.status = 'declined'";
+} elseif ($filter === 'pending') {
+    $where_conditions[] = "e.status = 'pending'";
 }
 
 if (!empty($search)) {
-    $where_conditions[] = "(e.title LIKE ? OR e.description LIKE ? OR u.full_name LIKE ?)";
+    $where_conditions[] = "(e.title LIKE ? OR e.description LIKE ? OR u.full_name LIKE ? OR e.location LIKE ?)";
     $search_param = "%$search%";
     $params[] = $search_param;
     $params[] = $search_param;
     $params[] = $search_param;
+    $params[] = $search_param;
 }
 
-$where_clause = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
+if (!empty($year)) {
+    $where_conditions[] = "YEAR(e.event_date) = ?";
+    $params[] = $year;
+}
 
-// Get events
+$where_clause = 'WHERE ' . implode(' AND ', $where_conditions);
+
+// Get past events with statistics
 $query = "
     SELECT e.*, u.full_name as creator_name, u.email as creator_email,
-           (SELECT COUNT(*) FROM rsvps WHERE event_id = e.id AND status = 'attending') as rsvp_count
+           (SELECT COUNT(*) FROM rsvps WHERE event_id = e.id AND status = 'attending') as rsvp_count,
+           (SELECT COUNT(*) FROM rsvps WHERE event_id = e.id) as total_responses
     FROM events e 
     JOIN users u ON e.created_by = u.id 
     $where_clause
-    ORDER BY e.created_at DESC
+    ORDER BY e.event_date DESC
 ";
 
 $stmt = $pdo->prepare($query);
 $stmt->execute($params);
-$events = $stmt->fetchAll();
+$pastEvents = $stmt->fetchAll();
+
+// Get statistics
+$stmt = $pdo->query("SELECT COUNT(*) as total_past_events FROM events WHERE event_date < CURDATE()");
+$totalPastEvents = $stmt->fetch()['total_past_events'];
+
+$stmt = $pdo->query("SELECT COUNT(*) as total_approved FROM events WHERE event_date < CURDATE() AND status = 'approved'");
+$totalApproved = $stmt->fetch()['total_approved'];
+
+$stmt = $pdo->query("SELECT COUNT(*) as total_declined FROM events WHERE event_date < CURDATE() AND status = 'declined'");
+$totalDeclined = $stmt->fetch()['total_declined'];
+
+$stmt = $pdo->query("SELECT COUNT(*) as total_pending FROM events WHERE event_date < CURDATE() AND status = 'pending'");
+$totalPending = $stmt->fetch()['total_pending'];
+
+// Get years for filter
+$stmt = $pdo->query("SELECT DISTINCT YEAR(event_date) as year FROM events WHERE event_date < CURDATE() ORDER BY year DESC");
+$years = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -113,7 +84,7 @@ $events = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Events - <?php echo SITE_NAME; ?></title>
+    <title>Event History - <?php echo SITE_NAME; ?></title>
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
@@ -136,8 +107,32 @@ $events = $stmt->fetchAll();
     <main>
         <div class="container">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h1 style="color: #667eea;">Manage Events</h1>
+                <h1 style="color: #667eea;">Event History</h1>
                 <a href="dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+
+            <!-- Statistics -->
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h3>Total Past Events</h3>
+                    <div class="number"><?php echo $totalPastEvents; ?></div>
+                    <p>All completed events</p>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Approved Events</h3>
+                    <div class="number" style="color: #28a745;"><?php echo $totalApproved; ?></div>
+                    <p>Successfully held</p>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Declined Events</h3>
+                    <div class="number" style="color: #dc3545;"><?php echo $totalDeclined; ?></div>
+                    <p>Not approved</p>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Pending Events</h3>
+                    <div class="number" style="color: #ffc107;"><?php echo $totalPending; ?></div>
+                    <p>Still awaiting approval</p>
+                </div>
             </div>
 
             <!-- Filters and Search -->
@@ -147,33 +142,43 @@ $events = $stmt->fetchAll();
                         <label for="search">Search Events</label>
                         <input type="text" id="search" name="search" class="form-control" 
                                value="<?php echo sanitize($search); ?>" 
-                               placeholder="Search by title, description, or creator...">
+                               placeholder="Search by title, description, creator, or location...">
                     </div>
                     <div class="form-group">
                         <label for="filter">Filter by Status</label>
                         <select id="filter" name="filter" class="form-control">
                             <option value="">All Events</option>
-                            <option value="pending" <?php echo $filter === 'pending' ? 'selected' : ''; ?>>Pending</option>
                             <option value="approved" <?php echo $filter === 'approved' ? 'selected' : ''; ?>>Approved</option>
                             <option value="declined" <?php echo $filter === 'declined' ? 'selected' : ''; ?>>Declined</option>
+                            <option value="pending" <?php echo $filter === 'pending' ? 'selected' : ''; ?>>Pending</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        <select id="year" name="year" class="form-control">
+                            <?php foreach ($years as $y): ?>
+                                <option value="<?php echo $y['year']; ?>" <?php echo $year == $y['year'] ? 'selected' : ''; ?>>
+                                    <?php echo $y['year']; ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="events.php" class="btn btn-secondary">Clear</a>
+                        <a href="event_history.php" class="btn btn-secondary">Clear</a>
                     </div>
                 </form>
             </div>
 
-            <!-- Events List -->
+            <!-- Past Events List -->
             <div class="card">
-                <h3>Events (<?php echo count($events); ?> found)</h3>
+                <h3>Past Events (<?php echo count($pastEvents); ?> found)</h3>
                 
-                <?php if (empty($events)): ?>
-                    <p>No events found matching your criteria.</p>
+                <?php if (empty($pastEvents)): ?>
+                    <p>No past events found matching your criteria.</p>
                 <?php else: ?>
                     <div class="event-grid">
-                        <?php foreach ($events as $event): ?>
+                        <?php foreach ($pastEvents as $event): ?>
                             <div class="event-card">
                                 <div class="event-header">
                                     <h3 class="event-title"><?php echo sanitize($event['title']); ?></h3>
@@ -189,37 +194,36 @@ $events = $stmt->fetchAll();
                                     </div>
                                     <div class="event-meta">
                                         <span>📍 <?php echo sanitize($event['location']); ?></span>
-                                        <span>👥 <?php echo $event['current_capacity']; ?>/<?php echo $event['max_capacity']; ?></span>
+                                        <span>👥 <?php echo $event['rsvp_count']; ?>/<?php echo $event['max_capacity']; ?></span>
                                     </div>
                                     <div class="event-meta">
                                         <span>👤 By: <?php echo sanitize($event['creator_name']); ?></span>
                                         <span>📧 <?php echo sanitize($event['creator_email']); ?></span>
                                     </div>
                                     <div class="event-meta">
-                                        <span>📊 RSVPs: <?php echo $event['rsvp_count']; ?></span>
+                                        <span>📊 Total Responses: <?php echo $event['total_responses']; ?></span>
                                         <span>📅 Created: <?php echo date('M j, Y', strtotime($event['created_at'])); ?></span>
                                     </div>
                                     
                                     <!-- Action Buttons -->
                                     <div class="event-actions">
+                                        <a href="view_event_details.php?event_id=<?php echo $event['id']; ?>" class="btn btn-secondary">
+                                            View Details
+                                        </a>
                                         <?php if ($event['status'] === 'pending'): ?>
-                                            <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to approve this event?')">
-                                                <input type="hidden" name="action" value="approve">
-                                                <input type="hidden" name="event_id" value="<?php echo $event['id']; ?>">
-                                                <button type="submit" class="btn btn-success">Approve</button>
-                                            </form>
-                                            <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to decline this event?')">
-                                                <input type="hidden" name="action" value="decline">
-                                                <input type="hidden" name="event_id" value="<?php echo $event['id']; ?>">
-                                                <button type="submit" class="btn btn-danger">Decline</button>
-                                            </form>
+                                            <button class="btn btn-success" 
+                                                    data-action="approve" 
+                                                    data-event-id="<?php echo $event['id']; ?>"
+                                                    data-confirm="Are you sure you want to approve this past event?">
+                                                Approve
+                                            </button>
+                                            <button class="btn btn-danger" 
+                                                    data-action="decline" 
+                                                    data-event-id="<?php echo $event['id']; ?>"
+                                                    data-confirm="Are you sure you want to decline this past event?">
+                                                Decline
+                                            </button>
                                         <?php endif; ?>
-                                        
-                                        <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this event? This action cannot be undone.')">
-                                            <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="event_id" value="<?php echo $event['id']; ?>">
-                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -239,4 +243,4 @@ $events = $stmt->fetchAll();
 
     <script src="../assets/js/main.js"></script>
 </body>
-</html>
+</html> 
