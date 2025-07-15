@@ -1,15 +1,9 @@
 {
-    "builds": [
-      {
-        "src": "admin/*.php",
-        "use": "@vercel/php"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/admin/(.*)",
-        "dest": "/admin/$1"
-      }
-    ]
-  }
-  
+  "version": 2,
+  "builds": [
+    {
+      "src": "Dockerfile",
+      "use": "@vercel/docker"
+    }
+  ]
+}
