@@ -132,43 +132,48 @@ $upcomingEvents = $stmt->fetchAll();
             </div>
 
             <!-- Create Event Modal -->
-            <div id="createEventModal" class="modal" style="display:none;">
-              <div class="modal-content">
-                <span class="close" id="closeCreateEventModal">&times;</span>
-                <h3>Create New Event</h3>
-                <form method="POST" action="create_event.php" data-validate>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label for="title">Event Title *</label>
-                            <input type="text" id="title" name="title" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="location">Location *</label>
-                            <input type="text" id="location" name="location" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Description *</label>
-                        <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label for="event_date">Event Date *</label>
-                            <input type="date" id="event_date" name="event_date" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="event_time">Event Time *</label>
-                            <input type="time" id="event_time" name="event_time" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="max_capacity">Max Capacity *</label>
-                            <input type="number" id="max_capacity" name="max_capacity" class="form-control" min="1" required>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Create Event</button>
-                </form>
-              </div>
-            </div>
+            <div id="createEventModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeCreateEventModal">&times;</span>
+    <h3>Create New Event</h3>
+
+    <form method="POST" action="create_event.php" data-validate>
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="title">Event Title *</label>
+          <input type="text" id="title" name="title" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="location">Location *</label>
+          <input type="text" id="location" name="location" class="form-control" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
+      </div>
+
+      <div class="grid-3">
+        <div class="form-group">
+          <label for="event_date">Event Date *</label>
+          <input type="date" id="event_date" name="event_date" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="event_time">Event Time *</label>
+          <input type="time" id="event_time" name="event_time" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="max_capacity">Max Capacity *</label>
+          <input type="number" id="max_capacity" name="max_capacity" class="form-control" min="1" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Create Event</button>
+    </form>
+  </div>
+</div>
+
 
             <!-- My Events -->
             <div class="card">
@@ -309,88 +314,295 @@ $upcomingEvents = $stmt->fetchAll();
 
     <script src="../assets/js/main.js"></script>
     <style>
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0; top: 0; width: 100%; height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.4);
+    :root {
+        --primary:rgb(255, 255, 255);
+        --secondary: #4c51bf;
+        --light-bg: #f9f9f9;
+        --ds-bg:rgb(39, 38, 38);
+        --text-color: #333;
+        --border-radius: 12px;
+        --transition: all 0.2s ease-in-out;
     }
-    .modal-content {
-      background-color: #fff;
-      margin: 5% auto;
-      padding: 2rem;
-      border-radius: 8px;
-      width: 90%; max-width: 600px;
-      position: relative;
+
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: var(--light-bg);
+        margin: 0;
+        padding: 0;
+        color: var(--text-color);
     }
-    .close {
-      color: #aaa;
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
-      font-size: 2rem;
-      font-weight: bold;
-      cursor: pointer;
+
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
     }
-    .close:hover { color: #333; }
-    .dashboard-card .btn {
-        width: 100%;
-        margin-bottom: 0.5rem;
-        box-sizing: border-box;
-        font-size: 1.1rem;
-        font-weight: 600;
-        border-radius: 8px;
+
+    .header {
+        background: var(--primary);
         padding: 1rem 0;
+        color: #fff;
     }
-    .dashboard-card .btn:last-child {
-        margin-bottom: 0;
+
+    .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
     }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 1rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .nav-links a {
+        color: var(--ds-bg);
+        text-decoration: none;
+        font-weight: 500;
+        transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+        text-decoration: underline;
+    }
+
     .hamburger {
         display: none;
-        font-size: 2rem;
+        font-size: 1.8rem;
         background: none;
         border: none;
         color: #fff;
-        cursor: pointer;
-        margin-left: auto;
     }
+
+    .card {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-card {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        text-align: center;
+    }
+
+    .dashboard-card h3 {
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 0.5rem 0;
+    }
+    .dashboard-card .btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.dashboard-card .btn:last-child {
+    margin-bottom: 0;
+}
+
+.btn-primary {
+    background-color: #4f46e5;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #4338ca;
+}
+
+.btn-secondary {
+    background-color: #f3f4f6;
+    color: #1f2937;
+}
+
+.btn-secondary:hover {
+    background-color: #e5e7eb;
+}
+
+.btn-info {
+    background: linear-gradient(to right, #38bdf8, #0ea5e9);
+    color: white;
+}
+
+.btn-info:hover {
+    filter: brightness(1.05);
+}
+
+
+    .event-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .event-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: var(--border-radius);
+        padding: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .event-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .event-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .badge {
+        padding: 0.3rem 0.6rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: capitalize;
+        background: #e2e8f0;
+        color: #333;
+    }
+
+    .badge-approved {
+        background-color: #c6f6d5;
+        color: #22543d;
+    }
+    .badge-pending {
+        background-color: #fefcbf;
+        color: #744210;
+    }
+    .badge-declined {
+        background-color: #fed7d7;
+        color: #742a2a;
+    }
+    .badge-attending {
+        background-color: #bee3f8;
+        color: #2c5282;
+    }
+
+    .event-body {
+        font-size: 0.9rem;
+        color: #444;
+    }
+
+    .event-meta {
+        margin-top: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.5rem;
+        font-size: 0.85rem;
+        color: #666;
+    }
+
+    .event-actions {
+        margin-top: 1rem;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 999;
+        left: 0; top: 0; width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.4);
+        overflow-y: auto;
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: 5% auto;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        width: 95%;
+        max-width: 600px;
+        position: relative;
+    }
+
+    .close {
+        color: #aaa;
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        font-size: 2rem;
+        cursor: pointer;
+    }
+
+    .close:hover {
+        color: #000;
+    }
+
+    footer.footer {
+        padding: 1rem 0;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #777;
+    }
+
     @media (max-width: 768px) {
-        .navbar {
-            flex-direction: column;
-            align-items: flex-start;
+        .hamburger {
+            display: block;
         }
         .nav-links {
-            display: none;
             flex-direction: column;
             width: 100%;
             background: #fff;
             color: #333;
-            padding: 1rem 0;
-            margin: 0;
+            display: none;
+            margin-top: 1rem;
         }
         .nav-links.active {
             display: flex;
         }
-        .hamburger {
-            display: block;
-        }
-        .logo {
-            margin-bottom: 0.5rem;
-        }
         .nav-links li {
             text-align: center;
             width: 100%;
-            margin: 0.5rem 0;
+            padding: 0.5rem 0;
         }
     }
+
     @media print {
         body * { visibility: hidden !important; }
         #joined-events-section, #joined-events-section * { visibility: visible !important; }
         #joined-events-section { position: absolute; left: 0; top: 0; width: 100vw; background: #fff; }
         .print-btn { display: none !important; }
     }
+
     </style>
     <script>
     document.addEventListener('DOMContentLoaded', function() {

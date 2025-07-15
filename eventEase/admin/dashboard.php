@@ -23,8 +23,8 @@ $pendingEvents = $stmt->fetch()['pending_events'];
 $stmt = $pdo->query("SELECT COUNT(*) as total_users FROM users WHERE role != 'admin'");
 $totalUsers = $stmt->fetch()['total_users'];
 
-        $stmt = $pdo->query("SELECT COUNT(*) as total_joins FROM rsvps");
-        $totalJoins = $stmt->fetch()['total_joins'];
+$stmt = $pdo->query("SELECT COUNT(*) as total_joins FROM rsvps");
+$totalJoins = $stmt->fetch()['total_joins'];
 
 // Get recent events
 $stmt = $pdo->prepare("
@@ -54,68 +54,245 @@ $eventStats = $stmt->fetchAll();
     <title>Admin Dashboard - <?php echo SITE_NAME; ?></title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
-    .hamburger {
-        display: none;
-        font-size: 2rem;
-        background: none;
-        border: none;
-        color: #fff;
-        cursor: pointer;
-        margin-left: auto;
-    }
-    @media (max-width: 768px) {
-        .navbar {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .nav-links {
-            display: none;
-            flex-direction: column;
-            width: 100%;
-            background: #fff;
-            color: #333;
+       /* Global Styles */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f7fc;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.header {
+            background-color: white;
             padding: 1rem 0;
-            margin: 0;
+            color: #fff;
         }
-        .nav-links.active {
+
+        .navbar {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
         }
-        .hamburger {
-            display: block;
-        }
+
         .logo {
-            margin-bottom: 0.5rem;
+            font-size: 1.6rem;
+            color: black;
+            font-weight: bold;
         }
-        .nav-links li {
-            text-align: center;
-            width: 100%;
-            margin: 0.5rem 0;
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
         }
+
+        .nav-links a {
+            color: black;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #f3f4f6;
+        }
+
+.hamburger {
+    display: none;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: black;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+/* Card Styles */
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.card h2, .card h3 {
+    color: #4f46e5;
+}
+
+.card p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.dashboard-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.dashboard-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.dashboard-card .number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4f46e5;
+}
+
+.dashboard-card p {
+    font-size: 1rem;
+    color: #555;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    background-color: #4f46e5;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    margin: 0.5rem 0;
+    display: inline-block;
+}
+
+.btn:hover {
+    background-color: #4338ca;
+}
+
+.btn-info {
+    background-color: #38bdf8;
+}
+
+.btn-warning {
+    background-color: #fbbf24;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+}
+
+table th, table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+table th {
+    background-color: #f9fafb;
+    font-size: 1rem;
+}
+
+/* Badge Styling */
+.badge {
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.badge-approved {
+    background-color: #c6f6d5;
+    color: #065f46;
+}
+
+.badge-pending {
+    background-color: #fefcbf;
+    color: #92400e;
+}
+
+.badge-declined {
+    background-color: #fecaca;
+    color: #991b1b;
+}
+
+/* Footer Styling */
+.footer {
+    background-color: #f9fafb;
+    padding: 1rem;
+    text-align: center;
+    color: #555;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Mobile View Styling */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
     }
+
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+        background-color: white;
+        padding: 1rem 0;
+        margin: 0;
+        display: none; /* Hide nav links on mobile by default */
+    }
+
+    .nav-links.active {
+        display: flex; /* Show nav links when active */
+    }
+
+    .hamburger {
+        display: block; /* Show hamburger button on mobile */
+    }
+}
+
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="navbar">
-            <div class="logo"><?php echo SITE_NAME; ?> - Admin</div>
-            <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">&#9776;</button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="../index.php">Home</a></li>
-                <li><a href="dashboard.php">Dashboard</a></li>
-                <li><a href="events.php">Manage Events</a></li>
-                <li><a href="event_history.php">Event History</a></li>
-                <li><a href="users.php">Manage Users</a></li>
-                <li><a href="../logout.php">Logout</a></li>
-            </ul>
-        </nav>
-    </header>
+<header class="header">
+    <nav class="navbar">
+        <div class="logo"><?php echo SITE_NAME; ?> - Admin</div>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">&#9776;</button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="../index.php">Home</a></li>
+            <li><a href="dashboard.php">Dashboard</a></li>
+            <li><a href="events.php">Manage Events</a></li>
+            <li><a href="event_history.php">Event History</a></li>
+            <li><a href="users.php">Manage Users</a></li>
+            <li><a href="../logout.php">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
 
     <!-- Main Content -->
     <main>
         <div class="container">
-            <h1 style="margin-bottom: 2rem; color: #667eea;">Admin Dashboard</h1>
-            
+            <h1>Admin Dashboard</h1>
+
             <!-- Welcome Message -->
             <div class="card">
                 <h2>Welcome, <?php echo sanitize($_SESSION['full_name']); ?>!</h2>
@@ -140,8 +317,8 @@ $eventStats = $stmt->fetchAll();
                     <p>Students and teachers</p>
                 </div>
                 <div class="dashboard-card">
-                                    <h3>Total JOINs</h3>
-                <div class="number"><?php echo $totalJoins; ?></div>
+                    <h3>Total JOINs</h3>
+                    <div class="number"><?php echo $totalJoins; ?></div>
                     <p>Event responses</p>
                 </div>
             </div>
@@ -186,7 +363,7 @@ $eventStats = $stmt->fetchAll();
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="events.php?action=view&id=<?php echo $event['id']; ?>" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">View</a>
+                                            <a href="events.php?action=view&id=<?php echo $event['id']; ?>" class="btn btn-secondary">View</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -229,6 +406,18 @@ $eventStats = $stmt->fetchAll();
             });
         }
     });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+    var hamburger = document.getElementById('hamburgerBtn');
+    var navLinks = document.getElementById('navLinks');
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', function() {
+            navLinks.classList.toggle('active'); // Toggle 'active' class on nav-links to show or hide
+        });
+    }
+});
+
     </script>
 </body>
 </html>

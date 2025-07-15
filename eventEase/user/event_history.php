@@ -118,49 +118,215 @@ $years = $stmt->fetchAll();
         </nav>
     </header>
 
+
+
+    <style>
+        body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f9fafb;
+  margin: 0;
+  padding: 0;
+  color: #1f2937;
+}
+
+.container {
+  max-width: 1150px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.card {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.event-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1.2rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease-in-out;
+}
+.event-card:hover {
+  transform: translateY(-2px);
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+.event-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.event-body {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.event-meta {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #555;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+}
+
+.badge {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.badge-approved { background: #c6f6d5; color: #065f46; }
+.badge-declined { background: #fecaca; color: #991b1b; }
+.badge-pending { background: #fefcbf; color: #92400e; }
+.badge-attending { background: #bee3f8; color: #1e40af; }
+.badge-not_attending { background: #e0e7ff; color: #4338ca; }
+
+.btn {
+  display: inline-block;
+  padding: 0.65rem 1.3rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+.btn-primary { background: #4f46e5; color: white; }
+.btn-secondary { background: #e2e8f0; color: #2d3748; }
+.btn-danger { background: #ef4444; color: white; }
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1.2rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  text-align: center;
+}
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+.stat-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #374151;
+}
+.stat-sublabel {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  transition: border 0.2s ease-in-out;
+}
+.form-control:focus {
+  border-color: #6366f1;
+  outline: none;
+  background-color: white;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer {
+  text-align: center;
+  font-size: 0.85rem;
+  padding: 1.5rem 0;
+  color: #6b7280;
+}
+
+    </style>
+
     <!-- Main Content -->
     <main>
         <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h1 style="color: #667eea;">My Event History</h1>
+            <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1 class="page-title">My Event History</h1>
                 <a href="dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
             </div>
 
             <!-- Statistics -->
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <h3>Events I Created</h3>
-                    <div class="number"><?php echo $totalCreated; ?></div>
-                    <p>Past events created</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number"><?php echo $totalCreated; ?></div>
+                    <div class="stat-label">Events I Created</div>
+                    <div class="stat-sublabel">Past events created</div>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Events I Attended</h3>
-                    <div class="number" style="color: #28a745;"><?php echo $totalAttended; ?></div>
-                    <p>Past events attended</p>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--success-color); "><?php echo $totalAttended; ?></div>
+                    <div class="stat-label">Events I Attended</div>
+                    <div class="stat-sublabel">Past events attended</div>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Approved Events</h3>
-                    <div class="number" style="color: #28a745;"><?php echo $totalApproved; ?></div>
-                    <p>Successfully held</p>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--success-color); "><?php echo $totalApproved; ?></div>
+                    <div class="stat-label">Approved Events</div>
+                    <div class="stat-sublabel">Successfully held</div>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Declined Events</h3>
-                    <div class="number" style="color: #dc3545;"><?php echo $totalDeclined; ?></div>
-                    <p>Not approved</p>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--danger-color); "><?php echo $totalDeclined; ?></div>
+                    <div class="stat-label">Declined Events</div>
+                    <div class="stat-sublabel">Not approved</div>
                 </div>
             </div>
 
             <!-- Filters and Search -->
             <div class="card">
-                <form method="GET" style="display: flex; gap: 1rem; align-items: end; flex-wrap: wrap;">
-                    <div class="form-group" style="flex: 1; min-width: 200px;">
-                        <label for="search">Search My Events</label>
+                <form method="GET" class="form-grid form-grid-3" style="gap: 1rem; align-items: end; flex-wrap: wrap;">
+                    <div class="form-group">
+                        <label for="search" class="form-label">Search My Events</label>
                         <input type="text" id="search" name="search" class="form-control" 
                                value="<?php echo sanitize($search); ?>" 
                                placeholder="Search by title, description, or location...">
                     </div>
                     <div class="form-group">
-                        <label for="filter">Filter by Status</label>
+                        <label for="filter" class="form-label">Filter by Status</label>
                         <select id="filter" name="filter" class="form-control">
                             <option value="">All Events</option>
                             <option value="approved" <?php echo $filter === 'approved' ? 'selected' : ''; ?>>Approved</option>
@@ -169,7 +335,7 @@ $years = $stmt->fetchAll();
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="year">Year</label>
+                        <label for="year" class="form-label">Year</label>
                         <select id="year" name="year" class="form-control">
                             <?php foreach ($years as $y): ?>
                                 <option value="<?php echo $y['year']; ?>" <?php echo $year == $y['year'] ? 'selected' : ''; ?>>
@@ -178,7 +344,7 @@ $years = $stmt->fetchAll();
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="display: flex; gap: 0.5rem; align-items: end;">
                         <button type="submit" class="btn btn-primary">Filter</button>
                         <a href="event_history.php" class="btn btn-secondary">Clear</a>
                     </div>

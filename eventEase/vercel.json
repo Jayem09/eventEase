@@ -1,0 +1,15 @@
+{
+    "builds": [
+      {
+        "src": "admin/*.php",
+        "use": "@vercel/php"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/admin/(.*)",
+        "dest": "/admin/$1"
+      }
+    ]
+  }
+  

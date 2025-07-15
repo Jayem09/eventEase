@@ -1,4 +1,4 @@
-/* EventEase - Modern School Event Management System */
+/* EventEase - Minimal UI Redesign */
 
 /* Reset and base styles */
 * {
@@ -10,16 +10,16 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f8f9fa;
+    color: #222;
+    background-color: #f5f6fa;
 }
 
 /* Header styles */
 .header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: #fff;
+    color: #222;
     padding: 1rem 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .navbar {
@@ -32,132 +32,132 @@ body {
 }
 
 .logo {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: bold;
+    letter-spacing: 1px;
 }
 
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
 .nav-links a {
-    color: white;
+    color: #222;
     text-decoration: none;
     padding: 0.5rem 1rem;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+    border-radius: 4px;
+    transition: background 0.2s;
 }
 
 .nav-links a:hover {
-    background-color: rgba(255,255,255,0.2);
+    background: #f0f0f0;
 }
 
 /* Container and layout */
 .container {
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2rem 1rem;
 }
 
 .card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    padding: 2rem;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #e5e5e5;
+    padding: 1.5rem;
     margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(34, 34, 34, 0.04); /* subtle shadow */
 }
 
 /* Form styles */
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
 
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #555;
+    font-weight: 500;
+    color: #333;
 }
 
 .form-control {
     width: 100%;
-    padding: 0.75rem;
-    border: 2px solid #e1e5e9;
-    border-radius: 5px;
+    padding: 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
     font-size: 1rem;
-    transition: border-color 0.3s;
+    background: #fafbfc;
+    transition: border-color 0.2s;
 }
 
 .form-control:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #888;
+    background: #fff;
 }
 
 /* Button styles */
 .btn {
     display: inline-block;
-    padding: 0.75rem 1.5rem;
+    padding: 0.7rem 1.2rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 500;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.3s;
+    background: #e5e5e5;
+    color: #222;
+    transition: background 0.2s;
     text-align: center;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: #222;
+    color: #fff;
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    background: #444;
 }
 
 .btn-success {
-    background: #28a745;
-    color: white;
+    background: #4caf50;
+    color: #fff;
 }
 
 .btn-success:hover {
-    background: #218838;
-    transform: translateY(-2px);
+    background: #388e3c;
 }
 
 .btn-danger {
-    background: #dc3545;
-    color: white;
+    background: #e53935;
+    color: #fff;
 }
 
 .btn-danger:hover {
-    background: #c82333;
-    transform: translateY(-2px);
+    background: #b71c1c;
 }
 
 .btn-warning {
-    background: #ffc107;
-    color: #212529;
+    background: #ffe082;
+    color: #222;
 }
 
 .btn-warning:hover {
-    background: #e0a800;
-    transform: translateY(-2px);
+    background: #ffd54f;
 }
 
 .btn-secondary {
-    background: #6c757d;
-    color: white;
+    background: #bdbdbd;
+    color: #222;
 }
 
 .btn-secondary:hover {
-    background: #5a6268;
-    transform: translateY(-2px);
+    background: #9e9e9e;
 }
 
 /* Table styles */
@@ -165,152 +165,156 @@ body {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 1rem;
+    background: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 1rem;
 }
 
 .table th,
 .table td {
-    padding: 1rem;
+    padding: 0.9rem 0.7rem;
     text-align: left;
-    border-bottom: 1px solid #e1e5e9;
+    border-bottom: 1px solid #ececec;
 }
 
 .table th {
-    background-color: #f8f9fa;
+    background-color: #f5f6fa;
     font-weight: 600;
-    color: #555;
+    color: #333;
 }
 
 .table tr:hover {
-    background-color: #f8f9fa;
+    background-color: #f0f0f0;
 }
 
 /* Status badges */
 .badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.875rem;
-    font-weight: 600;
+    padding: 0.2rem 0.7rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .badge-pending {
-    background-color: #fff3cd;
-    color: #856404;
+    background-color: #fffbe6;
+    color: #b59f3b;
 }
 
 .badge-approved {
-    background-color: #d4edda;
-    color: #155724;
+    background-color: #e6f9ed;
+    color: #2e7d4f;
 }
 
 .badge-declined {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #fdeaea;
+    color: #b71c1c;
 }
 
 .badge-attending {
-    background-color: #d1ecf1;
-    color: #0c5460;
+    background-color: #e6f4fa;
+    color: #1565c0;
 }
 
 /* Alert styles */
 .alert {
     padding: 1rem;
-    border-radius: 5px;
+    border-radius: 4px;
     margin-bottom: 1rem;
+    border: 1px solid #e5e5e5;
 }
 
 .alert-success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background-color: #e6f9ed;
+    color: #2e7d4f;
 }
 
 .alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background-color: #fdeaea;
+    color: #b71c1c;
 }
 
 .alert-warning {
-    background-color: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeaa7;
+    background-color: #fffbe6;
+    color: #b59f3b;
 }
 
 .alert-info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
+    background-color: #e6f4fa;
+    color: #1565c0;
 }
 
 /* Dashboard grid */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
 .dashboard-card {
-    background: white;
-    border-radius: 10px;
-    padding: 2rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    background: #fff;
+    border-radius: 6px;
+    padding: 1.5rem;
+    border: 1px solid #e5e5e5;
     text-align: center;
+    box-shadow: 0 2px 8px rgba(34, 34, 34, 0.04); /* subtle shadow */
 }
 
 .dashboard-card h3 {
-    color: #667eea;
+    color: #222;
     margin-bottom: 1rem;
 }
 
 .dashboard-card .number {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: bold;
-    color: #333;
+    color: #444;
 }
 
 /* Event cards */
 .event-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
 }
 
 .event-card {
-    background: white;
-    border-radius: 10px;
+    background: #fff;
+    border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
+    border: 1px solid #e5e5e5;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(34, 34, 34, 0.04); /* subtle shadow */
 }
 
 .event-card:hover {
-    transform: translateY(-5px);
+    background: #f0f0f0;
+    box-shadow: 0 4px 16px rgba(34, 34, 34, 0.07); /* slightly stronger on hover */
 }
 
 .event-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 1.5rem;
+    background: #f7f8fa; /* slightly different shade for separation */
+    color: #222;
+    padding: 1rem;
 }
 
 .event-body {
-    padding: 1.5rem;
+    padding: 1rem;
 }
 
 .event-meta {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.95rem;
     color: #666;
 }
 
 .event-actions {
     display: flex;
     gap: 0.5rem;
-    margin-top: 1rem;
+    margin-top: 0.7rem;
 }
 
 /* Responsive design */
@@ -319,28 +323,22 @@ body {
         flex-direction: column;
         gap: 1rem;
     }
-    
     .nav-links {
         flex-direction: column;
         gap: 0.5rem;
     }
-    
     .container {
         padding: 1rem;
     }
-    
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
-    
     .event-grid {
         grid-template-columns: 1fr;
     }
-    
     .table {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
     }
-    
     .table th,
     .table td {
         padding: 0.5rem;
@@ -350,7 +348,7 @@ body {
 /* Login/Register forms */
 .auth-container {
     max-width: 400px;
-    margin: 4rem auto;
+    margin: 3rem auto;
 }
 
 .auth-container .card {
@@ -358,26 +356,28 @@ body {
 }
 
 .auth-container h2 {
-    margin-bottom: 2rem;
-    color: #667eea;
+    margin-bottom: 1.5rem;
+    color: #222;
 }
 
 /* Footer */
 .footer {
-    background: #333;
-    color: white;
+    background: #f7f8fa; /* slightly different shade for separation */
+    color: #888;
     text-align: center;
-    padding: 2rem;
-    margin-top: 4rem;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    border-top: 1px solid #e5e5e5;
+    box-shadow: 0 -1px 6px rgba(34, 34, 34, 0.03); /* subtle top shadow */
 }
 
 /* Loading spinner */
 .spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #667eea;
+    border: 4px solid #ececec;
+    border-top: 4px solid #888;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     animation: spin 1s linear infinite;
     margin: 2rem auto;
 }
@@ -385,4 +385,12 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* Example for modal or dropdown if present */
+.modal, .dropdown-menu {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 4px 24px rgba(34, 34, 34, 0.08);
+    border: 1px solid #e5e5e5;
 }

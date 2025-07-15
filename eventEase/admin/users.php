@@ -99,6 +99,207 @@ $userStats = $stmt->fetchAll();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Users - <?php echo SITE_NAME; ?></title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        :root {
+            --primary-bg: #4f46e5;
+            --secondary-bg: #f4f7fc;
+            --accent-color: #38bdf8;
+            --text-color: #333;
+            --card-radius: 12px;
+            --transition: all 0.3s ease-in-out;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--secondary-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+        }
+
+        .header {
+            background-color: white;
+            padding: 1rem 0;
+            color: #fff;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            color: black;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: black;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #f3f4f6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: var(--card-radius);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .dashboard-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: var(--card-radius);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .dashboard-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+            color: var(--primary-bg);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-bg);
+            color: #fff;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: var(--card-radius);
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #4338ca;
+        }
+
+        .form-control {
+            padding: 0.75rem;
+            border-radius: 8px;
+            width: 100%;
+            border: 1px solid #ddd;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .event-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--card-radius);
+            padding: 1.5rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .event-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .badge {
+            padding: 0.4rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            text-transform: capitalize;
+        }
+
+        .badge-approved {
+            background-color: #c6f6d5;
+            color: #065f46;
+        }
+
+        .badge-pending {
+            background-color: #fefcbf;
+            color: #92400e;
+        }
+
+        .badge-declined {
+            background-color: #fecaca;
+            color: #991b1b;
+        }
+
+        .event-meta {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .event-actions {
+            margin-top: 1rem;
+        }
+
+        .footer {
+            background-color: #f9fafb;
+            text-align: center;
+            padding: 1rem 0;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                margin-top: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -119,28 +320,7 @@ $userStats = $stmt->fetchAll();
     <!-- Main Content -->
     <main>
         <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h1 style="color: #667eea;">Manage Users</h1>
-                <a href="dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
-            </div>
-
-            <!-- Flash Messages -->
-            <?php $flash = getFlashMessage(); ?>
-            <?php if ($flash): ?>
-                <div class="alert alert-<?php echo $flash['type']; ?>">
-                    <?php echo $flash['message']; ?>
-                </div>
-            <?php endif; ?>
-
-            <!-- User Statistics -->
-            <div class="dashboard-grid">
-                <?php foreach ($userStats as $stat): ?>
-                    <div class="dashboard-card">
-                        <h3><?php echo ucfirst($stat['role']); ?>s</h3>
-                        <div class="number"><?php echo $stat['count']; ?></div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
+            <h1 style="margin-bottom: 2rem; color: #667eea;">Manage Users</h1>
 
             <!-- Filters and Search -->
             <div class="card">

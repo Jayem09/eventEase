@@ -31,6 +31,299 @@ $totalUsers = $stmt->fetch()['total_users'];
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+
+<style>
+    body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9fafb;
+  margin: 0;
+  padding: 0;
+  color: #1f2937;
+}
+
+.container {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.header {
+  background-color: #ffffff; /* Changed from #4f46e5 to white */
+  color: #1f2937; /* Changed text color to dark for contrast */
+  padding: 1rem 0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0 1.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: #1f2937; /* Changed from white to dark for contrast */
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+.nav-links a:hover {
+  text-decoration: underline;
+  color: #4f46e5; /* Add purple on hover for accent */
+}
+
+.hamburger {
+  display: none;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: #1f2937; /* Changed from white to dark for contrast */
+  cursor: pointer;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.dashboard-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  text-align: center;
+}
+.dashboard-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+.dashboard-card p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* .hero {
+  padding: 5rem 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+} */
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.btn {
+  padding: 0.7rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+.btn-primary {
+  background-color: white;
+  color: #4f46e5;
+}
+.btn-primary:hover {
+  background-color: #f3f4f6;
+}
+.btn-secondary {
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.event-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-bottom: 3rem;
+}
+
+.event-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.event-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: #e5e7eb;
+  color: #333;
+  text-transform: capitalize;
+}
+.badge-approved {
+  background-color: #c6f6d5;
+  color: #065f46;
+}
+.badge-pending {
+  background-color: #fefcbf;
+  color: #92400e;
+}
+.badge-declined {
+  background-color: #fecaca;
+  color: #991b1b;
+}
+
+.event-description {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.event-meta {
+  font-size: 0.85rem;
+  color: #555;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.event-actions {
+  margin-top: 1rem;
+}
+.event-actions .btn {
+  display: inline-block;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: 6px;
+  background-color: #4f46e5;
+  color: white;
+}
+
+.event-actions .btn:hover {
+  background-color: #4338ca;
+}
+
+.footer {
+  background-color: #f3f4f6;
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+    color: #1f2937; /* Ensure hamburger is visible on white */
+  }
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hero-minimal {
+  padding: 6rem 1rem;
+  background-color: #ffffff;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+.hero-minimal h1 {
+  font-size: 2.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #111827;
+}
+.hero-minimal p {
+  font-size: 1.15rem;
+  color: #4b5563;
+  margin-bottom: 2rem;
+}
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.btn-outline {
+  background-color: transparent;
+  border: 2px solid #4f46e5;
+  color: #4f46e5;
+  font-weight: 600;
+}
+.btn-outline:hover {
+  background-color: #4f46e5;
+  color: white;
+}
+.btn-primary {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+}
+.btn-primary:hover {
+  background-color: #4338ca;
+}
+.btn,
+.btn-outline,
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: 0.2s ease-in-out;
+}
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: #fff;
+    color: #1f2937;
+    padding: 1rem;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links li {
+    text-align: center;
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+}
+
+</style>
     <!-- Header -->
     <header class="header">
         <nav class="navbar">
@@ -57,16 +350,21 @@ $totalUsers = $stmt->fetch()['total_users'];
     <!-- Main Content -->
     <main>
         <!-- Hero Section -->
-        <section class="hero" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 4rem 0; text-align: center;">
-            <div class="container">
-                <h1 style="font-size: 3rem; margin-bottom: 1rem;">Welcome to EventEase</h1>
-                <p style="font-size: 1.2rem; margin-bottom: 2rem;">The ultimate school event management platform for students and teachers</p>
-                <?php if (!isLoggedIn()): ?>
-                    <a href="register.php" class="btn btn-primary" style="margin-right: 1rem;">Get Started</a>
-                    <a href="login.php" class="btn" style="background: rgba(255,255,255,0.2); color: white;">Login</a>
-                <?php endif; ?>
-            </div>
-        </section>
+        <section class="hero-minimal">
+  <div class="container">
+    <h1>Welcome to EventEase</h1>
+    <p>A minimal school event management system for modern institutions.</p>
+
+    <?php if (!isLoggedIn()): ?>
+      <div class="hero-buttons">
+        <a href="register.php" class="btn btn-primary">Get Started</a>
+        <a href="login.php" class="btn btn-outline">Login</a>
+      </div>
+    <?php endif; ?>
+  </div>
+</section>
+
+
 
         <!-- Statistics Section -->
         <section class="container" style="margin-top: -2rem; position: relative; z-index: 10;">
@@ -169,7 +467,7 @@ $totalUsers = $stmt->fetch()['total_users'];
         font-size: 2rem;
         background: none;
         border: none;
-        color: #fff;
+        color: #1f2937; /* Ensure hamburger is visible on white */
         cursor: pointer;
         margin-left: auto;
     }
@@ -183,7 +481,7 @@ $totalUsers = $stmt->fetch()['total_users'];
             flex-direction: column;
             width: 100%;
             background: #fff;
-            color: #333;
+            color: #1f2937;
             padding: 1rem 0;
             margin: 0;
         }

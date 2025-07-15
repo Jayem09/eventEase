@@ -87,8 +87,8 @@ foreach ($attendees as $attendee) {
     <!-- Main Content -->
     <main>
         <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h1 style="color: #667eea;">Event Attendees</h1>
+            <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1 class="page-title">Event Attendees</h1>
                 <a href="dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
             </div>
 
@@ -116,26 +116,26 @@ foreach ($attendees as $attendee) {
             </div>
 
             <!-- Attendance Statistics -->
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <h3>Total Responses</h3>
-                    <div class="number"><?php echo $total_attendees; ?></div>
-                    <p>People who responded</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number"><?php echo $total_attendees; ?></div>
+                    <div class="stat-label">Total Responses</div>
+                    <div class="stat-sublabel">People who responded</div>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Attending</h3>
-                    <div class="number" style="color: #28a745;"><?php echo $attending_count; ?></div>
-                    <p>Confirmed attendees</p>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--success-color); "><?php echo $attending_count; ?></div>
+                    <div class="stat-label">Attending</div>
+                    <div class="stat-sublabel">Confirmed attendees</div>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Not Attending</h3>
-                    <div class="number" style="color: #dc3545;"><?php echo $not_attending_count; ?></div>
-                    <p>Declined invitations</p>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--danger-color); "><?php echo $not_attending_count; ?></div>
+                    <div class="stat-label">Not Attending</div>
+                    <div class="stat-sublabel">Declined invitations</div>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Available Spots</h3>
-                    <div class="number" style="color: #007bff;"><?php echo max(0, $event['max_capacity'] - $attending_count); ?></div>
-                    <p>Remaining capacity</p>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--primary-color); "><?php echo max(0, $event['max_capacity'] - $attending_count); ?></div>
+                    <div class="stat-label">Available Spots</div>
+                    <div class="stat-sublabel">Remaining capacity</div>
                 </div>
             </div>
 
@@ -171,9 +171,9 @@ foreach ($attendees as $attendee) {
                                         <td><?php echo sanitize($attendee['department'] ?: '-'); ?></td>
                                         <td>
                                             <?php if ($attendee['status'] === 'attending'): ?>
-                                                <span class="badge badge-success">Attending</span>
+                                                <span class="badge badge-approved">Attending</span>
                                             <?php elseif ($attendee['status'] === 'not_attending'): ?>
-                                                <span class="badge badge-danger">Not Attending</span>
+                                                <span class="badge badge-declined">Not Attending</span>
                                             <?php else: ?>
                                                 <span class="badge badge-warning">Maybe</span>
                                             <?php endif; ?>
@@ -186,16 +186,13 @@ foreach ($attendees as $attendee) {
                     </div>
 
                     <!-- Export Options -->
-                    <div style="margin-top: 2rem; text-align: center;">
-                        <h4>Export Attendees</h4>
-                        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                            <a href="export_attendees.php?event_id=<?php echo $event_id; ?>&format=csv" class="btn btn-primary">
-                                📊 Export to CSV
-                            </a>
-                            <a href="export_attendees.php?event_id=<?php echo $event_id; ?>&format=pdf" class="btn btn-secondary">
-                                📄 Export to PDF
-                            </a>
-                        </div>
+                    <div class="action-buttons" style="margin-top: 2rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="export_attendees.php?event_id=<?php echo $event_id; ?>&format=csv" class="btn btn-primary">
+                            📊 Export to CSV
+                        </a>
+                        <a href="export_attendees.php?event_id=<?php echo $event_id; ?>&format=pdf" class="btn btn-secondary">
+                            📄 Export to PDF
+                        </a>
                     </div>
                 <?php endif; ?>
             </div>
